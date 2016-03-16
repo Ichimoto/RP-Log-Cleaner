@@ -1,4 +1,27 @@
 <?php
+//remove the timestamp from a line for parsing
+function stripTimeStamp($line){
+	$newline = "";
+  	$arr1 = str_split($line);
+	$foundtimestamp = false;
+	$foundspace = false;
+	$foundchat = false;
+	for ($x = 0; $x <= count($arr1); $x++) {
+	    if ($arr1[$x] === '[' && !$foundtimestamp) $foundtimestamp = true;
+	    
+		if ($foundtimestamp && $arr1[$x] === ' ') $foundspace = true;
+		
+		if ($foundspace && $arr1[$x] !== ' ') $foundchat = true;
+		
+		if ($foundchat) $newline = $newline . $arr1[$x];
+	} 
+	if (!$foundtimestamp){
+		return false;
+	}else{
+		return $newline;
+	}
+}
+
 //Form submitted
 if(isset($_POST['submit'])) {
   //Error checking
@@ -13,13 +36,24 @@ if(isset($_POST['submit'])) {
 	  $linegap = $_POST['line'];
 	  $dcs = $_POST['dcs'];
 	  $ooc = $_POST['ooc'];
-	  $online = $_POST['online'];  
-	  	  
+	  $online = $_POST['online']; 
+	  $notimestamp = $_POST['notimestamp']; 
+
+	  if ($notimestamp == 'Yes') {
+		  $editedtext = "";
+		  foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
+		  		$line2 = stripTimeStamp($line);
+		 		if (!($line2 === false)) {
+		 			$editedtext = $editedtext . $line . "\r\n";
+		 		}
+		  }
+		  $text = $editedtext;
+	  }
 	  if ($dcs == 'Yes') {
 		  $editedtext = "";
 		  
 		  foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
-			  	$line2 = substr($line, 8);
+			  	$line2 = stripTimeStamp($line);
 			 	if (!(substr( $line2, 0, 3 ) === "DCS")) {
 			 		$editedtext = $editedtext . $line . "\r\n";
 			 	}  
@@ -31,7 +65,7 @@ if(isset($_POST['submit'])) {
 		  $editedtext = "";
 		  
 		  foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
-			  	$line2 = substr($line, 8);
+			  	$line2 = stripTimeStamp($line);
 			 	if (!(substr( $line2, 0, 2 ) === "((") && !(substr( $line2, -2 ) === "))")) {
 			 		$editedtext = $editedtext . $line . "\r\n";
 			 	}  
@@ -43,9 +77,10 @@ if(isset($_POST['submit'])) {
 		  $editedtext = "";
 		  
 		  foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
-			  	$check = substr($line, -7);
+			    $linecheck = preg_replace("/[^A-Za-z0-9 ]/", '', $line);
+			  	$check = substr($linecheck, -6);
 			 	 
-				if ($check !== "ffline." && $check !== "online."){
+				if ($check !== "ffline" && $check !== "online"){
 					$editedtext = $editedtext . $line . "\r\n";
 				}
 		  }
@@ -87,6 +122,7 @@ if(isset($_POST['submit'])) {
   	  	<input type="checkbox" name="dcs" value="Yes" checked> Filter DCS spam
   	  	<input type="checkbox" name="ooc" value="Yes" checked> Remove OOC posts
   	  	<input type="checkbox" name="online" value="Yes" checked> Remove Online/Offline posts
+  	  	<input type="checkbox" name="notimestamp" value="Yes" checked> Remove lines with no timestamp
   	  	<p><input type="submit" name="submit" value="Clean Text" /></p>
 	</form>
 
@@ -104,6 +140,3 @@ if(isset($_POST['submit'])) {
 </script>
 </body>
 </html>
-
-
-
