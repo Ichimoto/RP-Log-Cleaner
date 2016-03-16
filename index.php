@@ -38,6 +38,8 @@ if(isset($_POST['submit'])) {
 	  $ooc = $_POST['ooc'];
 	  $online = $_POST['online']; 
 	  $notimestamp = $_POST['notimestamp']; 
+	  $simenter = $_POST['simenter'];
+	  $landstream = $_POST['landstream'];
 
 	  if ($notimestamp == 'Yes') {
 		  $editedtext = "";
@@ -86,6 +88,30 @@ if(isset($_POST['submit'])) {
 		  }
 		  $text = $editedtext;
 	  }
+	  
+	  if ($simenter == 'Yes') {
+		  $editedtext = "";
+		  
+		  foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
+			  	$line2 = stripTimeStamp($line);
+			 	if (strpos($line2, 'left the region') === false && strpos($line2, 'entered the region') === false) {
+			 		$editedtext = $editedtext . $line . "\r\n";
+			 	}  
+		  }
+		  $text = $editedtext;
+	  }
+	  
+	  if ($landstream == 'Yes'){
+		  $editedtext = "";
+		  
+		  foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
+			  	$line2 = stripTimeStamp($line);
+			 	if (!(substr( $line2, 0, 11 ) === "Now playing")) {
+			 		$editedtext = $editedtext . $line . "\r\n";
+			 	}  
+		  }
+		  $text = $editedtext;
+	  }
 	  	  
 	  if ($linegap == 'Yes') {
 		  $editedtext = "";
@@ -112,21 +138,27 @@ if(isset($_POST['submit'])) {
 	
 	<a href="https://github.com/zacthespack/RP-Log-Cleaner"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
 	
-	ALPHA VERSION <a href="/changelog.html">0.2</a><br>
+	ALPHA VERSION <a href="/changelog.html">0.3</a><br>
 
-	<p>Born out of the laziness of one Denenthorn Masukami this tool is designed to quickly and easily clean Role Play Logs, currently designed for use on the Second Life sim Toxian City</p>
+	<p>Born out of the laziness of one Denenthorn Masukami this tool is designed to quickly and easily clean Role Play Logs,<br>designed for use on the Second Life sim Toxian City but slowly developing to become a SL wide clener working with a range of combact systems</p>
 	<form method="post">
  	   <?=$error['error']?>
+	   Combact System Used:<select name="cs">
+	     <option value="dcs">DCS2</option>
+	   </select>
   	 	<p><label for="text">RP Text to Clean:<br></label><textarea type="text" id="text" name="text"><?=$text?></textarea></p>
   		<input type="checkbox" name="line" value="Yes" checked> Line Break Posts
-  	  	<input type="checkbox" name="dcs" value="Yes" checked> Filter DCS spam
+  	  	<input type="checkbox" name="dcs" value="Yes" checked> Filter Combact System spam
   	  	<input type="checkbox" name="ooc" value="Yes" checked> Remove OOC posts
   	  	<input type="checkbox" name="online" value="Yes" checked> Remove Online/Offline posts
   	  	<input type="checkbox" name="notimestamp" value="Yes" checked> Remove lines with no timestamp
+  	  	<input type="checkbox" name="simenter" value="Yes" checked> Remove sim leave/enter messages
+  	  	<input type="checkbox" name="landstream" value="Yes" checked> Remove Land Stream messages
   	  	<p><input type="submit" name="submit" value="Clean Text" /></p>
 	</form>
 
-	<p>Built by Lyrza (zp.lyric) if you find a bug or have a feature request please IM me on skype or in SL</p>
+	<p>Built by Lyrza (zp.lyric) if you find a bug or have a feature request please email: <a href="mailto:support@rplogcleaner.com" target="_top">support@rplogcleaner.com</a>
+</p>
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
