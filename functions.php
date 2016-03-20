@@ -1,4 +1,9 @@
 <?php
+//Objects to remove post of
+$objectsToRemove = array(
+    "(Chemistry) Hair", "Magika Updates", "VISTA ANIMATIONS", ":TOX:", "L&B \"Dress Shoe\""
+);
+
 //remove the timestamp from a line for parsing
 function stripTimeStamp($line){
 	$newline = "";
@@ -44,8 +49,9 @@ if(isset($_POST['submit'])) {
 	
 	//No errors, process
 	if(!is_array($error)) {
-		$text = $_POST['text'];
 		
+		$text = $_POST['text'];
+				
 		$linegap = $_POST['line'];
 		$dcs = $_POST['dcs'];
 		$ooc = $_POST['ooc'];
@@ -54,7 +60,10 @@ if(isset($_POST['submit'])) {
 		$simenter = $_POST['simenter'];
 		$landstream = $_POST['landstream'];
 		$csUsed = $_POST['cs'];
-		  
+		$secondlife = $_POST['secondlife'];
+		$objects = $_POST['objects'];
+		$chatrange = $_POST['chatrange'];
+			
 		if ($notimestamp == 'Yes') {
 			$editedtext = "";
 			foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
@@ -114,6 +123,18 @@ if(isset($_POST['submit'])) {
 			}
 			$text = $editedtext;
 		}
+		
+		if ($chatrange == 'Yes') {
+			$editedtext = "";
+		  
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
+				$line2 = stripTimeStamp($line);
+				if (strpos($line2, 'entered chat range') === false && strpos($line2, 'left chat range') === false) {
+					$editedtext = $editedtext . $line . "\r\n";
+				}  
+			}
+			$text = $editedtext;
+		}
 	  
 		if ($landstream == 'Yes'){
 			$editedtext = "";
@@ -123,6 +144,34 @@ if(isset($_POST['submit'])) {
 				if (!(substr( $line2, 0, 11 ) === "Now playing")) {
 					$editedtext = $editedtext . $line . "\r\n";
 				}  
+			}
+			$text = $editedtext;
+		}
+		
+		if ($secondlife == 'Yes'){
+			$editedtext = "";
+		  
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
+				$line2 = stripTimeStamp($line);
+				if (!(substr( $line2, 0, 11 ) === "Second Life")) {
+					$editedtext = $editedtext . $line . "\r\n";
+				}  
+			}
+			$text = $editedtext;
+		}
+		
+		if ($objects == 'Yes'){
+			$editedtext = "";
+		  
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
+				$removeline = false;
+				$line2 = stripTimeStamp($line);
+				foreach ($objectsToRemove as $toremove){
+					if (substr( $line2, 0, strlen($toremove) ) === $toremove){
+						$removeline = true;
+					}
+				}
+				if (!$removeline) $editedtext = $editedtext . $line . "\r\n";
 			}
 			$text = $editedtext;
 		}
@@ -136,11 +185,6 @@ if(isset($_POST['submit'])) {
 		  
 			$text = $editedtext;
 		}
-	}
-	
-	if (isset($_POST['LOG'])){
-		echo $text;
-		die;
 	}
 }
 ?>
