@@ -21,7 +21,7 @@ include 'functions.php';
 	
 	<div class="container">
 		<div class="alert alert-success">
-  		  <strong>News!</strong> The RP Log Cleaner HUD is now on the marketplace, record logs and have them automaticlly cleaned, no copy and past needed! <a href="https://marketplace.secondlife.com/p/RP-Log-Cleaner/8770289">Buy Now</a>
+  		  <strong>News!</strong> The RP Log Cleaner HUD is now on the marketplace, record logs and have them automaticlly cleaned, no copy and paste needed! <a href="https://marketplace.secondlife.com/p/RP-Log-Cleaner/8770289">Buy Now</a>
 	  	</div>
 		<h1>RP Log Cleaner</h1>
 		<h2>Stable VERSION <a href="/changelog.html">1.0</a><br></h2>
@@ -84,15 +84,9 @@ include 'functions.php';
 		
 	</p>
 
-	<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-	ga('create', 'UA-75168411-1', 'auto');
-	ga('send', 'pageview');
-
-	</script>
+	
 </body>
 </html>
+
+
+

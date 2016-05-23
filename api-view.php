@@ -4,14 +4,28 @@ include 'dbconnect.php';
 if (isset($_GET['log'])){
 	$logurl = $_GET['log'];
 	
-	$sql = "SELECT * FROM logs WHERE url = '$logurl'";
+	$sql = "SELECT * FROM log WHERE url = '$logurl'";
 	$result = $conn->query($sql);
-
+	$text = "";
+	
 	if ($result->num_rows > 0) {
 	    // output data of each row
 	    while($row = $result->fetch_assoc()) {
-	        $text =  $row["rp"];
+	        $logid =  $row["id"];
 	    }
+		
+		
+		$sql = "SELECT * FROM post WHERE logID = '$logid'";
+		$result2 = $conn->query($sql);
+		if ($result2->num_rows > 0) {
+		    // output data of each row
+		    while($row1 = $result2->fetch_assoc()) {
+		       $text .=  $row1["rp"];
+		    }
+		
+		} else {
+		    echo "0 results";
+		}
 	} else {
 	    echo "0 results";
 	}
@@ -43,8 +57,6 @@ if (isset($_GET['log'])){
 			</div>
 	
 		</p>
-
-		
 	</body>
 	</html>
 	<?

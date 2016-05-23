@@ -6,15 +6,19 @@ $objectsToRemove = array(
 
 //remove the timestamp from a line for parsing
 function stripTimeStamp($line){
+	
 	$newline = "";
 	$arr1 = str_split($line);
 	$foundtimestamp = false;
+	$foundendtime = false;
 	$foundspace = false;
 	$foundchat = false;
 	for ($x = 0; $x <= count($arr1); $x++) {
 		if ($arr1[$x] === '[' && !$foundtimestamp) $foundtimestamp = true;
+		
+		if ($foundtimestamp && $arr1[$x] === ']') $foundendtime = true;
 	    
-		if ($foundtimestamp && $arr1[$x] === ' ') $foundspace = true;
+		if ($foundendtime && $arr1[$x] === ' ') $foundspace = true;
 		
 		if ($foundspace && $arr1[$x] !== ' ') $foundchat = true;
 		
